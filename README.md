@@ -138,39 +138,107 @@ colmeia/
 
 ---
 
-## Quickstart
+## Instalacao
 
-### Instalacao remota (sem clonar)
+Existem **3 formas** de instalar a COLMEIA, da mais simples a mais personalizada:
+
+### Metodo 1: One-liner remoto (recomendado para comecar)
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/GuiRCosta/colmeia/main/install.sh | bash -s -- --init
 ```
 
-Isso clona o repositorio automaticamente para `~/.colmeia/` e inicia o wizard interativo.
+- Clona automaticamente para `~/.colmeia/`
+- Inicia o wizard interativo que gera o `project.yaml`
+- Instala agentes e CLAUDE.md de uma vez
+- Nao precisa clonar o repo manualmente
 
-### Instalacao local
+### Metodo 2: Clone + wizard interativo
 
 ```bash
 git clone https://github.com/GuiRCosta/colmeia.git
 cd colmeia
-
-# Opcao 1: Wizard interativo (recomendado)
 ./install.sh --init
+```
 
-# Opcao 2: Copiar exemplo e editar manualmente
+- Wizard pergunta nome do projeto, stacks e categorias
+- Gera `project.yaml` automaticamente
+- Ideal se quiser manter o repo local para customizar stacks
+
+### Metodo 3: Configuracao manual
+
+```bash
+git clone https://github.com/GuiRCosta/colmeia.git
+cd colmeia
 cp examples/project-ideva.yaml project.yaml
+# Edite project.yaml com suas stacks e preferencias
 ./install.sh
 ```
 
-### Deteccao automatica de stack (via agente)
+- Controle total sobre a configuracao
+- Ideal para projetos com stacks nao-padrao
 
-Se voce ja tem um projeto e quer que a COLMEIA detecte suas tecnologias automaticamente:
+### Metodo bonus: Via agente (dentro do Claude Code)
+
+Se voce ja instalou a COLMEIA e quer configurar um **novo projeto**:
 
 ```
 > Use o agente colmeia-installer para detectar minha stack
 ```
 
-O agente analisa `package.json`, `pyproject.toml`, `docker-compose.yml`, etc., e gera o `project.yaml` para voce.
+O agente analisa seu projeto, detecta tecnologias e gera o `project.yaml` automaticamente via conversa. Veja a secao [Agente Instalador](#agente-instalador-colmeia-installer) para detalhes.
+
+---
+
+## Agente Instalador (`colmeia-installer`)
+
+A COLMEIA inclui um **meta-agente que configura tudo por voce via conversa**. Em vez de editar o `project.yaml` manualmente, o agente analisa seu projeto, detecta tecnologias e gera a configuracao automaticamente.
+
+### Como usar
+
+Dentro do Claude Code, no diretorio do seu projeto:
+
+```
+> Configure a COLMEIA para este projeto
+```
+
+ou explicitamente:
+
+```
+> Use o agente colmeia-installer para detectar minha stack e gerar project.yaml
+```
+
+### O que o agente faz
+
+1. **Escaneia o projeto** — lê `package.json`, `pyproject.toml`, `docker-compose.yml`, `requirements.txt` e outros indicadores
+2. **Detecta tecnologias** — mapeia dependencias para stacks COLMEIA disponiveis
+3. **Confirma com voce** — apresenta o que encontrou e pergunta se esta correto
+4. **Gera o `project.yaml`** — cria o manifesto com stacks, agentes e convencoes
+5. **Sugere instalar** — recomenda rodar `./install.sh` para completar o setup
+
+### Deteccao automatica
+
+| O que encontra no projeto | Stack sugerida |
+|---------------------------|----------------|
+| `fastify` em dependencies | `backend: "node-fastify"` |
+| `react` + `vite` em dependencies | `frontend: "react-vite"` |
+| `drizzle-orm` em dependencies | `database: "postgresql-drizzle"` |
+| `ioredis` ou `redis` em dependencies | `cache: "redis"` |
+| `docker-compose.yml` com `swarm` | `infra: "docker-swarm"` |
+| `jsonwebtoken` em dependencies | `auth: "jwt-custom"` |
+| `agno` em pyproject.toml | `ai: "agno-python"` |
+
+### Fluxo completo: do zero a instalacao
+
+```
+1. curl -fsSL .../install.sh | bash -s -- --init     # Clona COLMEIA para ~/.colmeia/
+2. cd meu-projeto/
+3. > Use o agente colmeia-installer                   # Agente detecta stack e gera project.yaml
+4. ~/.colmeia/install.sh                              # Instala agentes e gera CLAUDE.md
+5. Pronto — agentes adaptativos ativos!
+```
+
+> **Nota:** O agente gera o `project.yaml`, mas a instalacao efetiva (symlinks, CLAUDE.md) e feita pelo `install.sh`. Sao complementares.
 
 ---
 
@@ -292,7 +360,7 @@ constraints: |
 | `documentation` | doc-writer, readme-generator, changelog-writer, doc-updater | Maioria dos projetos |
 | `research` | code-explorer, library-researcher, debug-investigator, ux-reviewer | Maioria dos projetos |
 | `e2e` | e2e-runner | Projetos com frontend |
-| `meta` | orchestrator, claude-md-optimizer, colmeia-installer | Power users |
+| `meta` | orchestrator, claude-md-optimizer, **colmeia-installer** | Power users (installer detecta stacks automaticamente) |
 
 ---
 
