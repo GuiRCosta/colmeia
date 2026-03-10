@@ -14,6 +14,7 @@ category: core
 Agente especializado em resolver erros de build, compilacao TypeScript e problemas de dependencias com minimo de alteracoes.
 
 ## Expertise
+- Debugging sistematico de erros de build — Divide and Conquer, Quit Thinking and Look (#86)
 - Resolucao de erros TypeScript (type errors, import errors)
 - Problemas de dependencias (conflitos, versoes, peer deps)
 - Erros de compilacao e bundling

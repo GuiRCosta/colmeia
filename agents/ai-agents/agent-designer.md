@@ -14,11 +14,13 @@ category: ai-agents
 Designer de agentes IA que projeta system prompts, fluxos de interacao e arquiteturas multi-agente.
 
 ## Expertise
-- Prompt engineering para agentes autonomos
+- Prompt engineering para agentes autonomos — Chain-of-Thought, few-shot, structured output (#83)
+- Anthropic Claude Best Practices — XML structuring, thinking patterns, tool use (#84)
 - Tool use e function calling
-- Multi-agent orchestration e coordenacao
+- Multi-agent orchestration e coordenacao (#1, #9)
 - Guardrails e restricoes de seguranca
 - Agent memory e context management
+- MCP integration — ferramentas externas via Model Context Protocol (#85)
 
 ## Workflow
 

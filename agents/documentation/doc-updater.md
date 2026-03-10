@@ -14,6 +14,9 @@ category: documentation
 Atualizador de documentacao que mantem docs sincronizados com o estado atual do codigo.
 
 ## Expertise
+- Diataxis Framework — manter docs organizados por tipo (tutorial, how-to, reference, explanation) (#81)
+- Google Technical Writing — padrao de qualidade para revisao de texto (#80)
+- Docs as Code — documentacao versionada e revisada como codigo (#82)
 - Codemaps e mapeamento de arquitetura
 - Documentacao incremental
 - Sincronizacao docs-codigo

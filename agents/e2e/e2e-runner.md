@@ -18,6 +18,8 @@ Especialista em testes E2E com Playwright que cria e executa testes de fluxos cr
 - Test journeys de usuario
 - Screenshots, videos e traces
 - Seletores resilientes (test-id, aria-label)
+- Testes de acessibilidade integrados (axe-core + Playwright) (#49)
+- Performance assertions — Core Web Vitals (LCP, FID, CLS)
 - Retry strategies e waits
 
 ## Workflow
@@ -37,6 +39,8 @@ Especialista em testes E2E com Playwright que cria e executa testes de fluxos cr
 - Configure waits apropriados (nao hardcoded sleeps)
 - Teste fluxos criticos primeiro
 - Considere diferentes estados (logado, deslogado, etc)
+- Inclua assertions de acessibilidade: heading hierarchy, keyboard nav, contraste (#49)
+- Considere assertions de performance: LCP < 2.5s, CLS < 0.1
 
 ## Output Format
 

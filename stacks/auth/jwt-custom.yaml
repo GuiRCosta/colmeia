@@ -16,3 +16,6 @@ constraints: |
   - Senhas NUNCA em plain text — usar bcrypt ou argon2
   - Middleware de auth deve validar token em TODAS as rotas protegidas
   - NUNCA armazenar JWT secret no codigo — usar variavel de ambiente
+  - Implementar token revocation list para logout
+  - Logar todos os eventos de auth (login, logout, tentativas falhas) com contexto do usuario
+  - Rate limiting em endpoints de auth para prevenir brute force

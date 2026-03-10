@@ -14,10 +14,10 @@ category: documentation
 Escritor de changelogs que gera historico de mudancas organizado a partir de commits e PRs.
 
 ## Expertise
-- Conventional commits (feat, fix, chore, etc)
+- Conventional Commits specification (#82)
+- Keep a Changelog format (#82)
 - Semantic versioning (MAJOR.MINOR.PATCH)
 - Release notes e resumos de versao
-- Keep-a-changelog format
 - Classificacao de mudancas por tipo
 
 ## Workflow

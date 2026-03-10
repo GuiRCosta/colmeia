@@ -14,9 +14,10 @@ category: ai-agents
 Engenheiro de prompts que otimiza system prompts, cria exemplos few-shot e melhora resultados de LLMs.
 
 ## Expertise
+- Chain-of-Thought prompting — raciocinio em etapas para tarefas complexas (#83)
+- Anthropic Claude Best Practices — XML tags, contexto longo, thinking patterns (#84)
 - Prompt engineering (clareza, especificidade, contexto)
 - Few-shot learning (exemplos de input/output)
-- Chain-of-thought prompting
 - Output formatting e estruturacao
 - Guardrails e restricoes de comportamento
 

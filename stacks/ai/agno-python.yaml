@@ -25,3 +25,6 @@ constraints: |
   - Agentes Agno em snake_case (ex: luna_agent, nexo_router)
   - Cada agente em arquivo separado
   - Usar .env para API keys, NUNCA hardcoded
+  - Structured logging para decisoes de agentes e invocacoes de tools
+  - Monitorar uso de tokens e custos de API
+  - Implementar error handling e fallback strategies para falhas de LLM

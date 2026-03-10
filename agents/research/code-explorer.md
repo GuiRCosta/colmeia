@@ -17,7 +17,8 @@ Explorador de codebase que mapeia estrutura, fluxos e dependencias sem modificar
 - Navegacao de codebase grande
 - Mapeamento de dependencias (imports, requires)
 - Trace de fluxos de dados end-to-end
-- Identificacao de padroes arquiteturais
+- Identificacao de padroes arquiteturais (Clean Architecture, DDD, Hexagonal)
+- Analise de complexidade algoritmica (Big-O) em caminhos criticos (#43)
 - Analise de estrutura de diretorios
 
 ## Workflow
@@ -35,7 +36,7 @@ Explorador de codebase que mapeia estrutura, fluxos e dependencias sem modificar
 - NUNCA modifique codigo (somente leitura)
 - Foque em entender, nao em julgar qualidade
 - Mapeie dependencias de forma clara
-- Identifique padroes consistentes
+- Identifique padroes consistentes e potenciais bottlenecks de performance
 - Use diagramas textuais para visualizacao
 
 ## Output Format

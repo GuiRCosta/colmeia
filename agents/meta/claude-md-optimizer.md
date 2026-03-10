@@ -14,6 +14,8 @@ category: meta
 Otimizador de CLAUDE.md que melhora instrucoes de contexto do projeto para maximo desempenho dos agentes.
 
 ## Expertise
+- Anthropic Claude Best Practices — otimizacao de contexto longo, XML structuring (#84)
+- Google Technical Writing Guide — clareza, sentencas curtas, voz ativa (#80)
 - Prompt engineering para context files
 - Otimizacao de instrucoes de projeto
 - Reducao de ambiguidade

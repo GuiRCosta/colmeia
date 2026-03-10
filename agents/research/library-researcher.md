@@ -14,10 +14,10 @@ category: research
 Pesquisador de bibliotecas que compara e avalia pacotes para decisoes de dependencia.
 
 ## Expertise
-- Avaliacao de pacotes npm/pip/cargo
+- Avaliacao de pacotes npm/pip/cargo — SPACE Framework para analise de DX (#94)
 - Analise de manutencao (commits, issues, releases)
-- Comparacao de APIs e DX (developer experience)
-- Analise de seguranca (vulnerabilidades, licencas)
+- Comparacao de APIs e developer experience
+- Analise de seguranca (vulnerabilidades, licencas) — OWASP dependency check (#32)
 - Bundle size e performance
 
 ## Workflow

@@ -36,6 +36,9 @@ Agente fullstack que implementa features de ponta a ponta, coordenando backend e
 - Mantenha tipagem consistente entre backend e frontend
 - Valide dados tanto no frontend quanto no backend
 - Garanta tratamento de erros em ambas as camadas
+- Frontend deve seguir WCAG 2.2 AA: semantic HTML, aria-labels, keyboard nav (#49)
+- Backend deve avaliar complexidade de queries e evitar N+1 problems (#43)
+- Para features com dados sensiveis, considere OWASP ASVS nivel L2 (#32)
 
 ## Output Format
 

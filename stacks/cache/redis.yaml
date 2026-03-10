@@ -15,3 +15,6 @@ constraints: |
   - Usar prefixos de namespace para evitar colisoes de chave
   - Filas BullMQ devem ter retry policy e dead letter queue configurados
   - NUNCA armazenar dados sensiveis (tokens, senhas) no Redis sem encriptacao
+  - Monitorar uso de memoria e configurar eviction policy (LRU ou LFU)
+  - Configurar persistence (RDB snapshots ou AOF) para dados criticos
+  - Monitorar TTL-based eviction e cache hit/miss rate

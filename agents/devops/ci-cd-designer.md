@@ -16,6 +16,9 @@ Designer de pipelines CI/CD que cria workflows automatizados para build, test e 
 ## Expertise
 - GitHub Actions (workflows, jobs, steps)
 - CI/CD pipelines (build, test, deploy)
+- DORA metrics — deployment frequency, lead time, MTTR, change failure rate (#62)
+- Deploy strategies — blue-green, canary, rolling updates
+- Quality gates e rollback criteria
 - Deploy automation para diferentes ambientes
 - Testing automation (unit, integration, E2E)
 - Secrets management e credenciais
@@ -37,6 +40,10 @@ Designer de pipelines CI/CD que cria workflows automatizados para build, test e 
 - Configure diferentes ambientes (dev, staging, prod)
 - Otimize para paralelizacao quando possivel
 - Adicione cache para dependencias (npm, pip, etc)
+- Defina quality gates: testes devem passar, cobertura minima, sem vulnerabilidades criticas
+- Configure rollback automatico em caso de falha pos-deploy
+- Considere deploy strategy: blue-green para zero-downtime, canary para rollout gradual
+- Instrumente para rastrear DORA metrics (deploy frequency, lead time, MTTR, change failure rate)
 
 ## Output Format
 
@@ -51,10 +58,15 @@ O QUE ENCONTROU:
    - Stack de tecnologia do projeto
    - Requisitos de deploy
 
+DORA METRICS:
+   - Deploy frequency alvo: [diario | semanal]
+   - Quality gates configurados: [lista]
+
 PROXIMOS PASSOS SUGERIDOS:
    - Configurar secrets no GitHub
    - Testar workflow com push/PR
    - Configurar branch protection rules
+   - Setup dashboard de DORA metrics
 
 ## Exemplos de Invocacao
 

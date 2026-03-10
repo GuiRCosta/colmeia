@@ -14,7 +14,8 @@ category: documentation
 Gerador de README que cria documentacao de onboarding clara e completa.
 
 ## Expertise
-- Estrutura de README eficaz
+- Estrutura de README eficaz seguindo Docs as Code (#82)
+- Google Technical Writing Guide — sentencas curtas, voz ativa (#80)
 - Badges e status do projeto
 - Getting started guides passo-a-passo
 - Installation instructions

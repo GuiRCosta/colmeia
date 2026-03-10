@@ -14,7 +14,7 @@ category: ai-agents
 Integrador MCP que configura e conecta MCP servers para ampliar capacidades de agentes.
 
 ## Expertise
-- Model Context Protocol (MCP)
+- Model Context Protocol (MCP) — transports, capabilities, lifecycle (#85)
 - Tool definitions e schemas
 - Server configuration e setup
 - Resource management

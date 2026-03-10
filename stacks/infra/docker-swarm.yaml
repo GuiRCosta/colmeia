@@ -28,3 +28,7 @@ constraints: |
   - Sempre usar deploy replicas e update_config para zero-downtime
   - Secrets via Docker secrets, NUNCA variavel de ambiente em plain text para senhas
   - Networks devem ser overlay e attachable quando necessario
+  - Todos os services devem expor /health e /metrics endpoints
+  - Configurar health checks com interval/timeout/retries apropriados
+  - Definir resource limits (memory, CPU) para cada service baseado em SLOs
+  - Executar containers como non-root user quando possivel

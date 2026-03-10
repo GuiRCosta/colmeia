@@ -19,3 +19,7 @@ constraints: |
   - Usar Drizzle schema definitions, NUNCA SQL raw para DDL
   - Queries complexas podem usar sql`` template do Drizzle
   - Migrations devem ser geradas via Drizzle Kit, nunca manuais
+  - Usar EXPLAIN ANALYZE para queries > 100ms
+  - Todas as foreign keys devem ter indice
+  - Prevenir N+1 queries: usar Drizzle relations / eager loading
+  - Configurar slow query log (log_min_duration_statement = 1000ms)

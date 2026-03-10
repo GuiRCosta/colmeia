@@ -29,5 +29,9 @@ commands:
 
 constraints: |
   - Sempre validar request body com Zod schemas nas definicoes de rota
-  - Services NUNCA devem importar tipos do Fastify (logica de negocio pura)
+  - Services NUNCA devem importar tipos do Fastify (logica de negocio pura — Clean Architecture Dependency Rule)
   - Repositories devem retornar objetos de dominio, nao rows crus do DB
+  - Structured logging obrigatorio: usar Pino (built-in Fastify) com request context (requestId, userId)
+  - Health check endpoints obrigatorios: /health (liveness) e /ready (readiness)
+  - Avaliar complexidade de queries: prevenir N+1, usar EXPLAIN ANALYZE para queries > 100ms
+  - Exportar metricas Prometheus: request duration (histogram), errors (counter)
