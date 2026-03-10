@@ -22,6 +22,7 @@ COLMEIA e um framework de **subagentes adaptativos para Claude Code** organizado
 colmeia/
 ├── project.yaml                     # Manifesto do projeto (voce configura)
 ├── install.sh                       # Instalador adaptativo
+├── install-full.sh                  # Instalador + aliases full permission
 ├── base/
 │   └── CLAUDE-base.md               # Regras universais (dispatch, modelos)
 ├── stacks/                          # Configs por stack (composiveis)
@@ -234,7 +235,9 @@ constraints: |
 
 ---
 
-## Flags do instalador
+## Instaladores
+
+### install.sh — Instalador padrao
 
 ```bash
 ./install.sh              # Instalacao padrao
@@ -242,6 +245,27 @@ constraints: |
 ./install.sh --clean      # Remove todos os symlinks da COLMEIA
 ./install.sh --project    # Instala em .claude/ local (por projeto)
 ```
+
+### install-full.sh — Instalador + Full Permission
+
+```bash
+./install-full.sh         # Instala tudo + configura aliases
+```
+
+Faz tudo que o `install.sh` faz e adiciona dois **aliases** ao seu shell (`~/.zshrc` ou `~/.bashrc`):
+
+| Alias | Comando completo | O que faz |
+|-------|-----------------|-----------|
+| `claude-full` | `claude --dangerously-skip-permissions` | Inicia nova sessao sem confirmacoes |
+| `claude-full-continue` | `claude --dangerously-skip-permissions --continue` | Continua ultima sessao sem confirmacoes |
+
+Apos instalar, ative com:
+
+```bash
+source ~/.zshrc   # ou source ~/.bashrc
+```
+
+> **AVISO:** `--dangerously-skip-permissions` desativa **todas** as confirmacoes de seguranca. O Claude pode executar qualquer acao (deletar arquivos, push, bash) sem pedir aprovacao. Use com cuidado.
 
 ---
 
