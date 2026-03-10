@@ -5,6 +5,20 @@
 
 ---
 
+## Quick Install
+
+```bash
+# Instalacao remota (sem clonar)
+curl -fsSL https://raw.githubusercontent.com/GuiRCosta/colmeia/main/install.sh | bash -s -- --init
+
+# Ou clone e instale
+git clone https://github.com/GuiRCosta/colmeia.git
+cd colmeia
+./install.sh --init
+```
+
+---
+
 ## O que e
 
 COLMEIA e um framework de **subagentes adaptativos para Claude Code** organizados por fase do ciclo de desenvolvimento de software (SDLC). Diferente de repositorios estaticos de agentes, a COLMEIA se **molda ao projeto** via um manifesto `project.yaml`.
@@ -113,7 +127,7 @@ colmeia/
 │   ├── documentation/               # Docs, README, changelog
 │   ├── research/                    # Exploracao, bibliotecas, debug, UX
 │   ├── e2e/                         # Testes end-to-end
-│   └── meta/                        # Orquestrador, otimizador
+│   └── meta/                        # Orquestrador, otimizador, instalador
 ├── examples/                        # Manifestos de exemplo
 │   ├── project-ideva.yaml
 │   ├── project-nextjs-supabase.yaml
@@ -126,8 +140,18 @@ colmeia/
 
 ## Quickstart
 
+### Instalacao remota (sem clonar)
+
 ```bash
-git clone https://github.com/seu-usuario/colmeia.git
+curl -fsSL https://raw.githubusercontent.com/GuiRCosta/colmeia/main/install.sh | bash -s -- --init
+```
+
+Isso clona o repositorio automaticamente para `~/.colmeia/` e inicia o wizard interativo.
+
+### Instalacao local
+
+```bash
+git clone https://github.com/GuiRCosta/colmeia.git
 cd colmeia
 
 # Opcao 1: Wizard interativo (recomendado)
@@ -138,7 +162,15 @@ cp examples/project-ideva.yaml project.yaml
 ./install.sh
 ```
 
-O `--init` gera o `project.yaml` via perguntas interativas (nome, stacks, agentes, convencoes) e instala automaticamente.
+### Deteccao automatica de stack (via agente)
+
+Se voce ja tem um projeto e quer que a COLMEIA detecte suas tecnologias automaticamente:
+
+```
+> Use o agente colmeia-installer para detectar minha stack
+```
+
+O agente analisa `package.json`, `pyproject.toml`, `docker-compose.yml`, etc., e gera o `project.yaml` para voce.
 
 ---
 
@@ -260,7 +292,74 @@ constraints: |
 | `documentation` | doc-writer, readme-generator, changelog-writer, doc-updater | Maioria dos projetos |
 | `research` | code-explorer, library-researcher, debug-investigator, ux-reviewer | Maioria dos projetos |
 | `e2e` | e2e-runner | Projetos com frontend |
-| `meta` | orchestrator, claude-md-optimizer | Power users |
+| `meta` | orchestrator, claude-md-optimizer, colmeia-installer | Power users |
+
+---
+
+## CLI — Comandos do install.sh
+
+### Instalacao e configuracao
+
+```bash
+./install.sh                          # Instalacao padrao
+./install.sh --init                   # Wizard interativo — gera project.yaml e instala
+./install.sh --dry-run                # Mostra o que seria instalado sem alterar nada
+./install.sh --project                # Instala em .claude/ local (por projeto)
+```
+
+### Multi-IDE
+
+```bash
+./install.sh --target claude          # Claude Code (default)
+./install.sh --target cursor          # Cursor (.cursor/agents/ + .mdc)
+./install.sh --target codex           # Codex (.codex/agents/ + AGENTS.md)
+```
+
+### Monitoramento
+
+```bash
+./install.sh --status                 # Dashboard: versao, stacks, agentes instalados
+./install.sh --health                 # Verificacao de integridade (exit 1 se falhou)
+./install.sh --version                # Versao da COLMEIA
+```
+
+### Manutencao
+
+```bash
+./install.sh --update                 # git pull + reinstala automaticamente
+./install.sh --clean                  # Remove todos os symlinks da COLMEIA
+```
+
+### Instalacao remota
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/GuiRCosta/colmeia/main/install.sh | bash -s -- --init
+```
+
+Clona automaticamente para `~/.colmeia/` e inicia o wizard.
+
+---
+
+### install-full.sh — Instalador + Full Permission
+
+```bash
+./install-full.sh         # Instala tudo + configura aliases
+```
+
+Faz tudo que o `install.sh` faz e adiciona dois **aliases** ao seu shell (`~/.zshrc` ou `~/.bashrc`):
+
+| Alias | Comando completo | O que faz |
+|-------|-----------------|-----------|
+| `claude-full` | `claude --dangerously-skip-permissions` | Inicia nova sessao sem confirmacoes |
+| `claude-full-continue` | `claude --dangerously-skip-permissions --continue` | Continua ultima sessao sem confirmacoes |
+
+Apos instalar, ative com:
+
+```bash
+source ~/.zshrc   # ou source ~/.bashrc
+```
+
+> **AVISO:** `--dangerously-skip-permissions` desativa **todas** as confirmacoes de seguranca. O Claude pode executar qualquer acao (deletar arquivos, push, bash) sem pedir aprovacao. Use com cuidado.
 
 ---
 
@@ -325,41 +424,6 @@ ci-cd-designer        -> melhorias no pipeline de deploy
 
 ---
 
-## Instaladores
-
-### install.sh — Instalador padrao
-
-```bash
-./install.sh              # Instalacao padrao
-./install.sh --init       # Wizard interativo — gera project.yaml e instala
-./install.sh --dry-run    # Mostra o que seria instalado
-./install.sh --clean      # Remove todos os symlinks da COLMEIA
-./install.sh --project    # Instala em .claude/ local (por projeto)
-```
-
-### install-full.sh — Instalador + Full Permission
-
-```bash
-./install-full.sh         # Instala tudo + configura aliases
-```
-
-Faz tudo que o `install.sh` faz e adiciona dois **aliases** ao seu shell (`~/.zshrc` ou `~/.bashrc`):
-
-| Alias | Comando completo | O que faz |
-|-------|-----------------|-----------|
-| `claude-full` | `claude --dangerously-skip-permissions` | Inicia nova sessao sem confirmacoes |
-| `claude-full-continue` | `claude --dangerously-skip-permissions --continue` | Continua ultima sessao sem confirmacoes |
-
-Apos instalar, ative com:
-
-```bash
-source ~/.zshrc   # ou source ~/.bashrc
-```
-
-> **AVISO:** `--dangerously-skip-permissions` desativa **todas** as confirmacoes de seguranca. O Claude pode executar qualquer acao (deletar arquivos, push, bash) sem pedir aprovacao. Use com cuidado.
-
----
-
 ## Criando novos agentes
 
 1. Crie o arquivo em `agents/{categoria}/nome-do-agente.md`
@@ -397,4 +461,4 @@ Arquitetura embasada em 94 referencias academicas e da industria. Ver [REFERENCE
 
 ---
 
-*COLMEIA — Adaptive Agent Framework (c) 2026*
+*COLMEIA v1.0.0 — Adaptive Agent Framework (c) 2026*

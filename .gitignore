@@ -6,6 +6,9 @@ generated/CLAUDE.md
 .DS_Store
 Thumbs.db
 
+# Research (internal notes, not for distribution)
+research/
+
 # Editor files
 *.swp
 *.swo

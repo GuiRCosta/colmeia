@@ -14,7 +14,8 @@
 
 set -e
 
-COLMEIA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+COLMEIA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd 2>/dev/null || echo "")"
+COLMEIA_HOME="$HOME/.colmeia"
 
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -22,7 +23,22 @@ BLUE='\033[0;34m'
 RED='\033[0;31m'
 NC='\033[0m'
 
-# ── Executar install.sh padrao primeiro ─────────────────────
+# ── Resolver COLMEIA_DIR (mesmo fallback do install.sh) ──────
+is_valid_repo() {
+  [ -d "$1/agents" ] && [ -d "$1/stacks" ] && [ -f "$1/base/CLAUDE-base.md" ]
+}
+
+if [ -z "$COLMEIA_DIR" ] || ! is_valid_repo "$COLMEIA_DIR"; then
+  if [ -d "$COLMEIA_HOME" ] && is_valid_repo "$COLMEIA_HOME"; then
+    COLMEIA_DIR="$COLMEIA_HOME"
+  else
+    echo -e "${RED}Erro: repositorio COLMEIA nao encontrado.${NC}"
+    echo "Execute primeiro: ./install.sh (ou via curl)"
+    exit 1
+  fi
+fi
+
+# ── Confirmacao ──────────────────────────────────────────────
 echo ""
 echo -e "${BLUE}COLMEIA — Full Permission Installer${NC}"
 echo "============================================"
@@ -39,7 +55,7 @@ fi
 
 echo ""
 
-# Executar instalacao padrao
+# ── Executar instalacao padrao ───────────────────────────────
 bash "$COLMEIA_DIR/install.sh" "$@"
 
 echo ""
@@ -67,8 +83,6 @@ $MARKER_END"
 
 # ── Verificar se aliases ja existem ─────────────────────────
 if [ -f "$SHELL_RC" ] && grep -q "$MARKER_START" "$SHELL_RC"; then
-  # Remover bloco antigo e substituir
-  # Usa sed para remover do marcador inicio ate o fim
   if [[ "$(uname)" == "Darwin" ]]; then
     sed -i '' "/$MARKER_START/,/$MARKER_END/d" "$SHELL_RC"
   else
@@ -79,7 +93,6 @@ else
   echo -e "  ${GREEN}+${NC} Aliases adicionados em $SHELL_RC"
 fi
 
-# Adicionar bloco
 echo "" >> "$SHELL_RC"
 echo "$ALIASES_BLOCK" >> "$SHELL_RC"
 
