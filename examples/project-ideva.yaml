@@ -1,0 +1,45 @@
+# ============================================================
+# COLMEIA — iDEVA Stack (Node.js + Fastify + Agno + Docker Swarm)
+# ============================================================
+
+project:
+  name: "ideva"
+  description: "AI-powered WhatsApp agent platform"
+
+stacks:
+  backend:    "node-fastify"
+  frontend:   "react-vite"
+  database:   "postgresql-drizzle"
+  cache:      "redis"
+  infra:      "docker-swarm"
+  auth:       "jwt-custom"
+  ai:         "agno-python"
+
+agents:
+  optional:
+    - implementation
+    - devops
+    - ai-agents
+    - documentation
+    - research
+    - e2e
+    - meta
+  disabled: []
+
+conventions:
+  files_ts:     "kebab-case.ts"
+  classes:      "PascalCase"
+  functions:    "camelCase"
+  constants:    "UPPER_SNAKE_CASE"
+  db_tables:    "snake_case (plural)"
+  api_routes:   "/kebab-case (plural)"
+  agno_agents:  "snake_case (ex: luna_agent, nexo_router)"
+
+commands:
+  dev:        "npm run dev"
+  build:      "npm run build"
+  test:       "npm test"
+  db_push:    "npm run db:push"
+  db_studio:  "npm run db:studio"
+  deploy:     "docker stack deploy -c docker-compose.yml app"
+  agent_run:  "uv run python agent.py"

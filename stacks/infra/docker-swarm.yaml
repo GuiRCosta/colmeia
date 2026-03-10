@@ -1,0 +1,30 @@
+name: "Docker Swarm"
+description: "Orquestracao de containers com Docker Swarm e Traefik"
+category: infra
+
+context: |
+  ### Infraestrutura
+  - VPS: Contabo (ou outro provider)
+  - Containers: Docker Swarm
+  - Proxy reverso: Traefik
+  - Tunnel: Cloudflare Tunnel
+  - NUNCA expor porta 80/443 diretamente no host
+
+commands:
+  deploy: "docker stack deploy -c docker-compose.yml app"
+  services: "docker service ls"
+  logs: "docker service logs app_service --follow"
+
+constraints: |
+  - Labels do Traefik SEMPRE dentro do bloco `deploy:`, NUNCA fora:
+    ```yaml
+    services:
+      app:
+        deploy:
+          labels:                          # labels dentro de deploy
+            - "traefik.enable=true"
+        # labels:                          # NUNCA aqui fora
+    ```
+  - Sempre usar deploy replicas e update_config para zero-downtime
+  - Secrets via Docker secrets, NUNCA variavel de ambiente em plain text para senhas
+  - Networks devem ser overlay e attachable quando necessario

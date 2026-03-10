@@ -1,0 +1,27 @@
+name: "Agno (Python)"
+description: "Framework de agentes IA com Agno e Python"
+category: ai
+
+context: |
+  ### AI / Agentes
+  - Framework de agentes: Agno (Python)
+  - Gerenciador de deps Python: uv (NUNCA pip direto)
+  - WhatsApp: Evolution API
+  - Analytics: Supabase
+  - LLM principal: Claude (claude-sonnet-4-6 / claude-opus-4-6)
+
+commands:
+  run: "uv run python agent.py"
+  add_dep: "uv add pacote"
+  sync: "uv sync"
+
+constraints: |
+  - Python SEMPRE com uv:
+    ```bash
+    uv add pacote          # correto
+    uv run python script   # correto
+    pip install pacote     # NUNCA
+    ```
+  - Agentes Agno em snake_case (ex: luna_agent, nexo_router)
+  - Cada agente em arquivo separado
+  - Usar .env para API keys, NUNCA hardcoded

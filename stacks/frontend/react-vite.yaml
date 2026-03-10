@@ -1,0 +1,36 @@
+name: "React + Vite"
+description: "Frontend com React, Vite, Tailwind CSS e TypeScript"
+category: frontend
+
+context: |
+  ### Frontend
+  - Framework: React + Vite
+  - Styling: Tailwind CSS
+  - State: Zustand ou Context API
+  - Forms: React Hook Form + Zod
+
+  ### Padrao de Codigo Frontend — Feature-based Architecture
+
+  ```
+  src/
+  ├── features/
+  │   └── {feature-name}/
+  │       ├── components/   # Componentes especificos da feature
+  │       ├── hooks/        # Custom hooks da feature
+  │       ├── store/        # Estado local da feature
+  │       └── types.ts      # Types da feature
+  ├── components/           # Componentes globais/compartilhados
+  ├── hooks/                # Hooks globais
+  ├── lib/                  # Utilitarios, config de cliente HTTP
+  └── types/                # Types globais
+  ```
+
+commands:
+  dev: "npm run dev"
+  build: "npm run build"
+  preview: "npm run preview"
+
+constraints: |
+  - Componentes devem ser pequenos e focados (<200 linhas)
+  - Estado global apenas quando compartilhado entre features
+  - Formularios sempre com React Hook Form + Zod para validacao

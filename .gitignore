@@ -1,0 +1,14 @@
+# COLMEIA — Generated files
+generated/
+generated/CLAUDE.md
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/

@@ -1,0 +1,36 @@
+# ============================================================
+# COLMEIA — Python + Django + Docker Swarm
+# ============================================================
+
+project:
+  name: "django-api"
+  description: "REST API with Django and Docker Swarm"
+
+stacks:
+  # backend:  "python-django"         # Disponivel quando criar stacks/backend/python-django.yaml
+  cache:      "redis"
+  infra:      "docker-swarm"
+  # database: "postgresql-django"     # Disponivel quando criar stacks/database/postgresql-django.yaml
+
+agents:
+  optional:
+    - implementation
+    - devops
+    - documentation
+    - research
+  disabled: []
+
+conventions:
+  files_py:     "snake_case.py"
+  classes:      "PascalCase"
+  functions:    "snake_case"
+  constants:    "UPPER_SNAKE_CASE"
+  db_tables:    "snake_case (plural)"
+  api_routes:   "/kebab-case (plural)"
+
+commands:
+  dev:        "uv run python manage.py runserver"
+  test:       "uv run python manage.py test"
+  migrate:    "uv run python manage.py migrate"
+  shell:      "uv run python manage.py shell"
+  deploy:     "docker stack deploy -c docker-compose.yml app"

@@ -1,0 +1,33 @@
+name: "Node.js + Fastify"
+description: "Backend com Fastify HTTP framework e TypeScript"
+category: backend
+
+context: |
+  ### Backend
+  - Runtime: Node.js + TypeScript
+  - Framework HTTP: Fastify
+  - Validation: Zod schemas nas rotas
+  - Auth: JWT + middleware proprio
+
+  ### Padrao de Codigo Backend — Route -> Controller -> Service -> Repository
+
+  ```
+  src/
+  ├── routes/          # Registro de rotas + validacao de input (Zod)
+  ├── controllers/     # Orquestracao: chama services, monta resposta HTTP
+  ├── services/        # Regras de negocio puras, sem HTTP
+  ├── repositories/    # Acesso a dados (queries do ORM)
+  ├── middlewares/     # Auth, rate limit, error handler
+  ├── schemas/         # Schemas Zod compartilhados
+  └── types/           # Types/interfaces TypeScript
+  ```
+
+commands:
+  dev: "npm run dev"
+  build: "npm run build"
+  lint: "npm run lint"
+
+constraints: |
+  - Sempre validar request body com Zod schemas nas definicoes de rota
+  - Services NUNCA devem importar tipos do Fastify (logica de negocio pura)
+  - Repositories devem retornar objetos de dominio, nao rows crus do DB

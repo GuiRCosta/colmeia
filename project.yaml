@@ -1,0 +1,52 @@
+# ============================================================
+# COLMEIA — Project Manifest
+# ============================================================
+# Este arquivo define quais stacks, agentes e convencoes
+# serao instalados para o seu projeto.
+#
+# Uso: ./install.sh (le este arquivo automaticamente)
+# Docs: README.md
+# ============================================================
+
+project:
+  name: "meu-projeto"
+  description: "Descricao do projeto"
+
+# Stack selections — cada chave mapeia para um arquivo em stacks/
+# Comente ou remova linhas para desativar uma stack
+stacks:
+  backend:    "node-fastify"          # stacks/backend/node-fastify.yaml
+  frontend:   "react-vite"            # stacks/frontend/react-vite.yaml
+  database:   "postgresql-drizzle"    # stacks/database/postgresql-drizzle.yaml
+  cache:      "redis"                 # stacks/cache/redis.yaml
+  infra:      "docker-swarm"          # stacks/infra/docker-swarm.yaml
+  auth:       "jwt-custom"            # stacks/auth/jwt-custom.yaml
+  # ai:       "agno-python"           # stacks/ai/agno-python.yaml (descomente se usar)
+
+# Categorias de agentes opcionais a instalar
+# Agentes core (planner, architect, code-reviewer, etc.) sao SEMPRE instalados
+agents:
+  optional:
+    - implementation    # backend-engineer, frontend-engineer, fullstack-feature, migration-writer
+    - devops            # docker-specialist, ci-cd-designer, monitoring-setup
+    - documentation     # doc-writer, readme-generator, changelog-writer, doc-updater
+    - research          # code-explorer, library-researcher, debug-investigator
+    # - ai-agents       # agent-designer, prompt-engineer, mcp-integrator
+    # - e2e             # e2e-runner
+    # - meta            # orchestrator, claude-md-optimizer
+  disabled: []          # Agentes especificos para desativar (ex: ["migration-writer"])
+
+# Convencoes de nomenclatura
+conventions:
+  files_ts:     "kebab-case.ts"
+  classes:      "PascalCase"
+  functions:    "camelCase"
+  constants:    "UPPER_SNAKE_CASE"
+  db_tables:    "snake_case (plural)"
+  api_routes:   "/kebab-case (plural)"
+
+# Comandos de desenvolvimento (sobrescreve comandos das stacks)
+commands:
+  dev:      "npm run dev"
+  build:    "npm run build"
+  test:     "npm test"

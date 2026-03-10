@@ -1,0 +1,37 @@
+# ============================================================
+# COLMEIA — Next.js + Supabase + Vercel
+# ============================================================
+
+project:
+  name: "meu-saas"
+  description: "SaaS application with Next.js and Supabase"
+
+stacks:
+  backend:    "node-fastify"          # API routes via Next.js ou Fastify separado
+  frontend:   "react-vite"            # Pode trocar por nextjs quando disponivel
+  database:   "postgresql-drizzle"    # Supabase usa PostgreSQL
+  cache:      "redis"
+  # infra:                            # Vercel gerencia infra
+  auth:       "jwt-custom"            # Ou supabase-auth quando disponivel
+
+agents:
+  optional:
+    - implementation
+    - documentation
+    - research
+    - e2e
+  disabled: []
+
+conventions:
+  files_ts:     "kebab-case.ts"
+  classes:      "PascalCase"
+  functions:    "camelCase"
+  constants:    "UPPER_SNAKE_CASE"
+  db_tables:    "snake_case (plural)"
+  api_routes:   "/kebab-case (plural)"
+
+commands:
+  dev:      "npm run dev"
+  build:    "npm run build"
+  test:     "npm test"
+  lint:     "npm run lint"

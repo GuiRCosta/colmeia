@@ -1,0 +1,18 @@
+name: "JWT + Custom Middleware"
+description: "Autenticacao via JWT com middleware proprio"
+category: auth
+
+context: |
+  ### Autenticacao
+  - Metodo: JWT (JSON Web Tokens)
+  - Middleware: Custom auth middleware
+  - Refresh: Refresh token rotation
+
+commands: {}
+
+constraints: |
+  - Tokens JWT devem ter expiracao curta (15min access, 7d refresh)
+  - Refresh tokens devem ser rotacionados a cada uso
+  - Senhas NUNCA em plain text — usar bcrypt ou argon2
+  - Middleware de auth deve validar token em TODAS as rotas protegidas
+  - NUNCA armazenar JWT secret no codigo — usar variavel de ambiente

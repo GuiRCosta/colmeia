@@ -1,0 +1,17 @@
+name: "Redis"
+description: "Redis para cache, filas e sessoes"
+category: cache
+
+context: |
+  ### Cache / Queue
+  - Cache: Redis
+  - Queue: BullMQ + Redis
+  - Session: Redis (opcional)
+
+commands: {}
+
+constraints: |
+  - Sempre definir TTL para chaves de cache
+  - Usar prefixos de namespace para evitar colisoes de chave
+  - Filas BullMQ devem ter retry policy e dead letter queue configurados
+  - NUNCA armazenar dados sensiveis (tokens, senhas) no Redis sem encriptacao

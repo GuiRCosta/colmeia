@@ -1,0 +1,21 @@
+name: "PostgreSQL + Drizzle ORM"
+description: "Banco de dados PostgreSQL com Drizzle ORM para TypeScript"
+category: database
+
+context: |
+  ### Banco de Dados
+  - Principal: PostgreSQL
+  - ORM: Drizzle ORM
+  - Migrations: Drizzle Kit
+
+commands:
+  db_push: "npm run db:push"
+  db_studio: "npm run db:studio"
+  db_generate: "npm run db:generate"
+  db_migrate: "npm run db:migrate"
+
+constraints: |
+  - Tabelas sempre em snake_case (plural)
+  - Usar Drizzle schema definitions, NUNCA SQL raw para DDL
+  - Queries complexas podem usar sql`` template do Drizzle
+  - Migrations devem ser geradas via Drizzle Kit, nunca manuais
