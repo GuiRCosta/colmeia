@@ -26,16 +26,19 @@ NC='\033[0m'
 DRY_RUN=false
 CLEAN=false
 PROJECT_LOCAL=false
+INIT=false
 
 for arg in "$@"; do
   case $arg in
     --dry-run)  DRY_RUN=true ;;
     --clean)    CLEAN=true ;;
     --project)  PROJECT_LOCAL=true ;;
+    --init)     INIT=true ;;
     --help|-h)
       echo "Uso: ./install.sh [opcoes]"
       echo ""
       echo "Opcoes:"
+      echo "  --init      Wizard interativo — gera project.yaml e instala"
       echo "  --dry-run   Mostra o que seria instalado sem fazer alteracoes"
       echo "  --clean     Remove todos os symlinks da COLMEIA"
       echo "  --project   Instala em .claude/ local ao inves de ~/.claude/"
@@ -94,6 +97,254 @@ if $CLEAN; then
   exit 0
 fi
 
+# ── Init mode (wizard interativo) ─────────────────────────
+if $INIT; then
+  echo ""
+  echo -e "${BLUE}COLMEIA — Setup Wizard${NC}"
+  echo "============================================"
+  echo ""
+
+  if [ -f "$PROJECT_YAML" ]; then
+    echo -e "${YELLOW}project.yaml ja existe.${NC}"
+    echo -n "Sobrescrever? [s/N] "
+    read -r resp
+    if [[ ! "$resp" =~ ^[sS]$ ]]; then
+      echo -e "${YELLOW}Cancelado. Executando instalacao com project.yaml existente.${NC}"
+      echo ""
+      INIT=false
+    fi
+  fi
+fi
+
+if $INIT; then
+  # ── Funcao de selecao numerada ────────────────────────────
+  pick_option() {
+    local prompt="$1"
+    shift
+    local options=("$@")
+    local count=${#options[@]}
+
+    echo -e "  ${BLUE}${prompt}${NC}"
+    for i in "${!options[@]}"; do
+      echo -e "    $((i + 1))) ${options[$i]}"
+    done
+    echo -e "    0) nenhum"
+    echo -n "  > "
+    read -r choice
+
+    if [[ "$choice" == "0" ]] || [[ -z "$choice" ]]; then
+      echo ""
+      return 1
+    fi
+
+    if [[ "$choice" -ge 1 ]] && [[ "$choice" -le "$count" ]] 2>/dev/null; then
+      PICKED="${options[$((choice - 1))]}"
+      return 0
+    fi
+
+    echo -e "  ${YELLOW}Opcao invalida, pulando.${NC}"
+    return 1
+  }
+
+  pick_yes_no() {
+    local prompt="$1"
+    local default="$2"
+    echo -n "  $prompt "
+    if [[ "$default" == "s" ]]; then
+      echo -n "[S/n] "
+    else
+      echo -n "[s/N] "
+    fi
+    read -r resp
+    if [[ "$default" == "s" ]]; then
+      [[ ! "$resp" =~ ^[nN]$ ]]
+    else
+      [[ "$resp" =~ ^[sS]$ ]]
+    fi
+  }
+
+  # ── Projeto ──────────────────────────────────────────────
+  echo -e "${BLUE}1. Projeto${NC}"
+  echo ""
+  echo -n "  Nome do projeto: "
+  read -r INIT_NAME
+  if [ -z "$INIT_NAME" ]; then
+    INIT_NAME="meu-projeto"
+  fi
+
+  echo -n "  Descricao (opcional): "
+  read -r INIT_DESC
+  echo ""
+
+  # ── Stacks ───────────────────────────────────────────────
+  echo -e "${BLUE}2. Stacks${NC}"
+  echo ""
+
+  INIT_STACKS=""
+
+  # Descobrir categorias de stack disponiveis
+  for category_dir in "$COLMEIA_DIR"/stacks/*/; do
+    [ -d "$category_dir" ] || continue
+    category=$(basename "$category_dir")
+
+    # Descobrir opcoes dentro da categoria
+    stack_options=()
+    for stack_file in "$category_dir"*.yaml; do
+      [ -f "$stack_file" ] || continue
+      stack_choice=$(basename "$stack_file" .yaml)
+      # Ler nome legivel do yaml
+      stack_label=$(grep -E "^\s*name:" "$stack_file" 2>/dev/null | head -1 | sed 's/.*name:[[:space:]]*//' | sed 's/^["\x27]//;s/["\x27]$//' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+      if [ -n "$stack_label" ]; then
+        stack_options+=("$stack_choice ($stack_label)")
+      else
+        stack_options+=("$stack_choice")
+      fi
+    done
+
+    if [ ${#stack_options[@]} -eq 0 ]; then
+      continue
+    fi
+
+    if pick_option "$category:" "${stack_options[@]}"; then
+      # Extrair apenas o nome (antes do parentese)
+      stack_value="${PICKED%% (*}"
+      INIT_STACKS+="  ${category}:$(printf '%*s' $((16 - ${#category})) '')\"${stack_value}\""$'\n'
+      echo -e "  ${GREEN}+${NC} $category: $stack_value"
+    else
+      echo -e "  ${YELLOW}-${NC} $category: pulado"
+    fi
+    echo ""
+  done
+
+  # ── Agentes opcionais ────────────────────────────────────
+  echo -e "${BLUE}3. Categorias de agentes opcionais${NC}"
+  echo ""
+
+  INIT_OPTIONAL=""
+  AGENT_CATEGORIES=("implementation" "devops" "ai-agents" "documentation" "research" "e2e" "meta")
+  AGENT_DESCS=(
+    "backend, frontend, fullstack, migrations, API design"
+    "Docker, CI/CD, monitoring, incident response"
+    "design de agentes IA, prompts, MCP"
+    "docs, README, changelog"
+    "exploracao, bibliotecas, debug, UX"
+    "testes end-to-end (Playwright)"
+    "orquestrador, otimizador"
+  )
+
+  for i in "${!AGENT_CATEGORIES[@]}"; do
+    cat="${AGENT_CATEGORIES[$i]}"
+    desc="${AGENT_DESCS[$i]}"
+    agent_count=$(find "$COLMEIA_DIR/agents/$cat" -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
+
+    if pick_yes_no "$cat ($agent_count agentes — $desc)?" "s"; then
+      INIT_OPTIONAL+="    - $cat"$'\n'
+      echo -e "  ${GREEN}+${NC} $cat"
+    else
+      echo -e "  ${YELLOW}-${NC} $cat"
+    fi
+  done
+  echo ""
+
+  # ── Linguagem principal (para convencoes) ────────────────
+  echo -e "${BLUE}4. Convencoes${NC}"
+  echo ""
+
+  INIT_CONVENTIONS=""
+  LANG_OPTIONS=("JavaScript/TypeScript" "Python")
+  if pick_option "Linguagem principal:" "${LANG_OPTIONS[@]}"; then
+    lang_pick="${PICKED%% (*}"
+    if [[ "$lang_pick" == "JavaScript/TypeScript" ]]; then
+      INIT_CONVENTIONS='  files_ts:     "kebab-case.ts"
+  classes:      "PascalCase"
+  functions:    "camelCase"
+  constants:    "UPPER_SNAKE_CASE"
+  db_tables:    "snake_case (plural)"
+  api_routes:   "/kebab-case (plural)"'
+      echo -e "  ${GREEN}+${NC} Convencoes JS/TS (kebab-case, camelCase)"
+    else
+      INIT_CONVENTIONS='  files_py:     "snake_case.py"
+  classes:      "PascalCase"
+  functions:    "snake_case"
+  constants:    "UPPER_SNAKE_CASE"
+  db_tables:    "snake_case (plural)"
+  api_routes:   "/kebab-case (plural)"'
+      echo -e "  ${GREEN}+${NC} Convencoes Python (snake_case)"
+    fi
+  else
+    INIT_CONVENTIONS='  files:        "kebab-case"
+  classes:      "PascalCase"
+  functions:    "camelCase"
+  constants:    "UPPER_SNAKE_CASE"'
+    echo -e "  ${GREEN}+${NC} Convencoes padrao"
+  fi
+  echo ""
+
+  # ── Comandos ─────────────────────────────────────────────
+  echo -e "${BLUE}5. Comandos${NC}"
+  echo ""
+
+  INIT_COMMANDS=""
+  CMD_KEYS=("dev" "build" "test")
+  CMD_DEFAULTS=("npm run dev" "npm run build" "npm test")
+
+  for i in "${!CMD_KEYS[@]}"; do
+    key="${CMD_KEYS[$i]}"
+    default="${CMD_DEFAULTS[$i]}"
+    echo -n "  $key [$default]: "
+    read -r cmd_val
+    if [ -z "$cmd_val" ]; then
+      cmd_val="$default"
+    fi
+    INIT_COMMANDS+="  ${key}:$(printf '%*s' $((12 - ${#key})) '')\"${cmd_val}\""$'\n'
+  done
+  echo ""
+
+  # ── Gerar project.yaml ──────────────────────────────────
+  echo -e "${BLUE}Gerando project.yaml...${NC}"
+  echo ""
+
+  {
+    echo "# ============================================================"
+    echo "# COLMEIA — ${INIT_NAME} (gerado via --init)"
+    echo "# ============================================================"
+    echo ""
+    echo "project:"
+    echo "  name: \"${INIT_NAME}\""
+    if [ -n "$INIT_DESC" ]; then
+      echo "  description: \"${INIT_DESC}\""
+    fi
+    echo ""
+    echo "stacks:"
+    if [ -n "$INIT_STACKS" ]; then
+      printf '%s' "$INIT_STACKS"
+    else
+      echo "  # Nenhuma stack selecionada. Adicione manualmente:"
+      echo "  # backend:  \"node-fastify\""
+    fi
+    echo ""
+    echo "agents:"
+    echo "  optional:"
+    if [ -n "$INIT_OPTIONAL" ]; then
+      printf '%s' "$INIT_OPTIONAL"
+    else
+      echo "    # Nenhuma categoria opcional selecionada"
+    fi
+    echo "  disabled: []"
+    echo ""
+    echo "conventions:"
+    echo "$INIT_CONVENTIONS"
+    echo ""
+    echo "commands:"
+    printf '%s' "$INIT_COMMANDS"
+  } > "$PROJECT_YAML"
+
+  echo -e "  ${GREEN}+${NC} project.yaml gerado"
+  echo ""
+  echo -e "${GREEN}Setup completo! Continuando com a instalacao...${NC}"
+  echo ""
+fi
+
 # ── Banner ──────────────────────────────────────────────────
 echo ""
 echo -e "${BLUE}COLMEIA — Adaptive Agent Installer${NC}"
@@ -104,7 +355,10 @@ echo ""
 if [ ! -f "$PROJECT_YAML" ]; then
   echo -e "${RED}Erro: project.yaml nao encontrado.${NC}"
   echo ""
-  echo "Crie um project.yaml ou copie um exemplo:"
+  echo "Crie um project.yaml ou use o wizard interativo:"
+  echo "  ./install.sh --init"
+  echo ""
+  echo "Ou copie um exemplo:"
   echo "  cp examples/project-ideva.yaml project.yaml"
   echo "  cp examples/project-nextjs-supabase.yaml project.yaml"
   echo "  cp examples/project-python-django.yaml project.yaml"
@@ -117,7 +371,7 @@ fi
 yaml_get() {
   local file="$1"
   local key="$2"
-  grep -E "^\s*${key}:" "$file" 2>/dev/null | head -1 | sed "s/.*${key}:\s*//" | sed 's/^"//' | sed 's/"$//' | sed "s/^'//" | sed "s/'$//" | sed 's/\s*#.*//' | xargs
+  grep -E "^\s*${key}:" "$file" 2>/dev/null | head -1 | sed "s/.*${key}:[[:space:]]*//" | sed 's/^["\x27]//;s/["\x27]$//' | sed 's/[[:space:]]*#.*//' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
 }
 
 yaml_get_list() {
@@ -134,7 +388,7 @@ yaml_get_list() {
     if $in_section; then
       if [[ "$line" =~ ^[[:space:]]*-[[:space:]]+(.*) ]]; then
         local item="${BASH_REMATCH[1]}"
-        item=$(echo "$item" | sed 's/\s*#.*//' | xargs)
+        item=$(echo "$item" | sed 's/[[:space:]]*#.*//' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
         if [ -n "$item" ]; then
           items+=("$item")
         fi
@@ -188,7 +442,7 @@ yaml_get_map() {
       if [[ "$line" =~ ^[[:space:]]+([a-zA-Z_]+):[[:space:]]+[\"\']?([^\"\'#]+) ]]; then
         local k="${BASH_REMATCH[1]}"
         local v="${BASH_REMATCH[2]}"
-        v=$(echo "$v" | sed "s/[\"']//g" | xargs)
+        v=$(echo "$v" | sed "s/[\"']//g" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
         if [ -n "$v" ]; then
           results+=("$k=$v")
         fi

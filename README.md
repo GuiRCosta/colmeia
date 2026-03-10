@@ -130,16 +130,15 @@ colmeia/
 git clone https://github.com/seu-usuario/colmeia.git
 cd colmeia
 
-# Copie um exemplo ou crie seu project.yaml
+# Opcao 1: Wizard interativo (recomendado)
+./install.sh --init
+
+# Opcao 2: Copiar exemplo e editar manualmente
 cp examples/project-ideva.yaml project.yaml
-
-# Edite conforme seu projeto
-# vim project.yaml
-
-# Instale
-chmod +x install.sh
 ./install.sh
 ```
+
+O `--init` gera o `project.yaml` via perguntas interativas (nome, stacks, agentes, convencoes) e instala automaticamente.
 
 ---
 
@@ -332,6 +331,7 @@ ci-cd-designer        -> melhorias no pipeline de deploy
 
 ```bash
 ./install.sh              # Instalacao padrao
+./install.sh --init       # Wizard interativo — gera project.yaml e instala
 ./install.sh --dry-run    # Mostra o que seria instalado
 ./install.sh --clean      # Remove todos os symlinks da COLMEIA
 ./install.sh --project    # Instala em .claude/ local (por projeto)
