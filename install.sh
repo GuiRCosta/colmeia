@@ -8,7 +8,7 @@
 
 set -e
 
-COLMEIA_VERSION="1.0.0"
+COLMEIA_VERSION="1.1.0"
 COLMEIA_REPO="https://github.com/GuiRCosta/colmeia.git"
 COLMEIA_HOME="$HOME/.colmeia"
 

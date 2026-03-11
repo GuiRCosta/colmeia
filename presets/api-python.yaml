@@ -1,0 +1,38 @@
+# ============================================================
+# COLMEIA Preset: API Python
+# ============================================================
+# Stack para APIs Python com Docker.
+# Ideal para: APIs REST, microservicos, backends Python
+# Agentes: 26 (core + implementation + devops + docs + research)
+# ============================================================
+
+project:
+  name: "meu-projeto"
+  description: ""
+
+stacks:
+  # backend: Nenhuma stack Python disponivel ainda. Crie stacks/backend/python-django.yaml
+  cache:      "redis"
+  infra:      "docker-swarm"
+
+agents:
+  optional:
+    - implementation
+    - devops
+    - documentation
+    - research
+  disabled: []
+
+conventions:
+  files_py:     "snake_case.py"
+  classes:      "PascalCase"
+  functions:    "snake_case"
+  constants:    "UPPER_SNAKE_CASE"
+  db_tables:    "snake_case (plural)"
+  api_routes:   "/kebab-case (plural)"
+
+commands:
+  dev:        "uv run python manage.py runserver"
+  test:       "uv run pytest"
+  migrate:    "uv run python manage.py migrate"
+  deploy:     "docker stack deploy -c docker-compose.yml app"
